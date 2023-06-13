@@ -7,6 +7,7 @@ import SignupPage from "./pages/login_signup/SignUp";
 import CartPage from "./pages/CartPage";
 import Checkout from "./pages/CheckOut";
 import ProductDetailPage from "./pages/ProductDetailPage";
+import Protected from "./features/auth/Protected";
 
 function App() {
   return (
@@ -16,9 +17,9 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/product-detail" element={<ProductDetailPage />} />
+          <Protected> <Route path="/cart" element={<CartPage />} /></Protected>
+          <Protected><Route path="/checkout" element={<Checkout />} /></Protected>
+          <Protected><Route path="/products/:id" element={<ProductDetailPage />} /></Protected>
         </Routes>
       </BrowserRouter>
       <Toaster position="top-center" reverseOrder={false} />

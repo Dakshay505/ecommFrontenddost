@@ -2344,6 +2344,11 @@
       "email": "demo@gmail.com",
       "password": "Qwerty123",
       "id": 2
+    },
+    {
+      "email": "dakshaybishnoi@gmail.com",
+      "password": "Qwerty@123",
+      "id": 3
     }
   ],
   "cart": [

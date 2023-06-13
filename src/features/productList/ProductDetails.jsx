@@ -45,6 +45,7 @@ export default function ProductDetail() {
   const [selectedSize, setSelectedSize] = useState(sizes[2]);
   const user = useSelector(selectLoggedInUser)
   const product = useSelector(selectProductById);
+  console.log(product);
   const dispatch = useDispatch();
   const params = useParams();
 

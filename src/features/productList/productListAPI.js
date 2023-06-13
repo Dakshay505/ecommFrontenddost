@@ -13,6 +13,7 @@ export function fetchProductById(id) {
     //TODO: we will not hard-code server URL here
     const response = await fetch('http://localhost:5050/products/'+id) 
     const data = await response.json()
+    console.log(data);
     resolve({data})
   }
   );
