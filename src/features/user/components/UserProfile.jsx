@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectUserInfo, updateUserAsync } from '../userSlice';
-import { useForm } from 'react-hook-form';
+import { useController, useForm } from 'react-hook-form';
 
 export default function UserProfile() {
   const dispatch = useDispatch();
-  const user = useSelector(selectUserInfo);
+  const user = useSelector((state)=>state.auth.loggedInUser);
+  console.log("userss in profile",user)
   const [selectedEditIndex, setSelectedEditIndex] = useState(-1);
   const [showAddAddressForm, setShowAddAddressForm] = useState(false);
 
@@ -44,6 +45,8 @@ export default function UserProfile() {
   };
 
   const handleAdd = (address) => {
+    console.log(address);
+    console.log("this is user",user);
     const newUser = { ...user, addresses: [...user.addresses, address] };
     dispatch(updateUserAsync(newUser));
     setShowAddAddressForm(false);
@@ -266,7 +269,7 @@ export default function UserProfile() {
           ) : null}
 
           <p className="mt-0.5 text-sm text-gray-500">Your Addresses :</p>
-          {user.addresses.map((address, index) => (
+          {user.addresses && user.addresses.map((address, index) => (
             <div>
               {selectedEditIndex === index ? (
                 <form

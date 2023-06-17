@@ -15,16 +15,17 @@ export default function Cart() {
   const [open, setOpen] = useState(true);
 
   const items = useSelector(selectItems);
-  console.log(items[0]);
-  const totalAmount = items.reduce(
-    (amount, item) => item.item.price * item.item.quantity + amount,
+  console.log(items);
+  
+
+  const totalAmount =items && items.reduce(
+    (amount, item) => item.product.price * item.quantity + amount,
     0
   );
-  console.log(totalAmount)
-  const totalItems = items.reduce((total, item) => item.item.quantity + total, 0);
+  const totalItems =items && items.reduce((total, item) => item.quantity + total, 0);
 
   const handleQuantity = (e, item) => {
-    dispatch(updateCartAsync({ ...item.item, quantity: +e.target.value }));
+    dispatch(updateCartAsync({ id:item.id , quantity: +e.target.value }));
   };
 
   const handleRemove =(e, id)=>{
@@ -44,11 +45,11 @@ export default function Cart() {
             <div className="flow-root">
               <ul role="list" className="-my-6 divide-y divide-gray-200">
                 {items.map((item) => (
-                  <li key={item.item.id} className="flex py-6">
+                  <li key={item.product.id} className="flex py-6">
                     <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                       <img
-                        src={item.item.thumbnail}
-                        alt={item.item.title}
+                        src={item.product.thumbnail}
+                        alt={item.product.title}
                         className="h-full w-full object-cover object-center"
                       />
                     </div>
@@ -57,12 +58,12 @@ export default function Cart() {
                       <div>
                         <div className="flex justify-between text-base font-medium text-gray-900">
                           <h3>
-                            <a href={item.item.href}>{item.item.title}</a>
+                            <a href={item.product.href}>{item.product.title}</a>
                           </h3>
-                          <p className="ml-4">${item.item.price}</p>
+                          <p className="ml-4">${item.product.price}</p>
                         </div>
                         <p className="mt-1 text-sm text-gray-500">
-                          {item.item.brand}
+                          {item.product.brand}
                         </p>
                       </div>
                       <div className="flex flex-1 items-end justify-between text-sm">
@@ -73,7 +74,7 @@ export default function Cart() {
                           >
                             Qty
                           </label>
-                          <select onChange={(e) => handleQuantity(e, item)} value={item.item.quantity}>
+                          <select onChange={(e) => handleQuantity(e, item)} value={item.quantity}>
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -84,7 +85,7 @@ export default function Cart() {
 
                         <div className="flex">
                           <button
-                            onClick={e=>handleRemove(e,item.item.id)}
+                            onClick={e=>handleRemove(e,item.id)}
                             type="button"
                             className="font-medium text-indigo-600 hover:text-indigo-500"
                           >

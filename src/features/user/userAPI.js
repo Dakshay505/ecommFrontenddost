@@ -1,26 +1,23 @@
-export function fetchLoggedInUserOrders(userId) {
-  return new Promise(async (resolve) =>{
-    const response = await fetch('http://localhost:5050/orders/?user.id='+userId) 
-    const data = await response.json()
-    resolve({data})
-  }
-  );
+import axios from "axios";
+
+export async function fetchLoggedInUserOrders(userId) {
+  const {data} = await axios.get(`http://localhost:5050/orders`)
+  return data
 }
 
 
-export function fetchLoggedInUser(userId) {
-  return new Promise(async (resolve) =>{
-    const response = await fetch('http://localhost:5050/users/'+userId) 
-    const data = await response.json();
-    console.log(data);
-    resolve({data})
+export async function fetchLoggedInUser(userId) {
+    const {data} = await axios.get(`http://localhost:5050/users/me`);
+    
+    return data;
   }
-  );
-}
+
+
 
 export function updateUser(update) {
   return new Promise(async (resolve) => {
-    const response = await fetch('http://localhost:5050/users/'+update.id, {
+
+    const response = await fetch('http://localhost:5050/users/me', {
       method: 'PATCH',
       body: JSON.stringify(update),
       headers: { 'content-type': 'application/json' },

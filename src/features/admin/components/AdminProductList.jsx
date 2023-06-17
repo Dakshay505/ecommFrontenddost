@@ -4,10 +4,13 @@ import {
   fetchBrandsAsync,
   fetchCategoriesAsync,
   fetchProductsByFiltersAsync,
+  getAdminProductsByFiltersAsync,
   selectAllProducts,
+  selectAllProductsAdmin,
   selectBrands,
   selectCategories,
   selectTotalItems,
+  selectTotalItemsAdmin,
 } from '../../productList/productSlice';
 import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
@@ -24,7 +27,7 @@ import {
   PlusIcon,
   Squares2X2Icon,
 } from '@heroicons/react/20/solid';
-import { ITEMS_PER_PAGE } from '../../../constants/constant';
+import { ITEMS_PER_PAGE, discountedPrice } from '../../../constants/constant';
 
 const sortOptions = [
   { name: 'Best Rating', sort: 'rating', order: 'desc', current: false },
@@ -38,10 +41,10 @@ function classNames(...classes) {
 
 export default function AdminProductList() {
   const dispatch = useDispatch();
-  const products = useSelector(selectAllProducts);
+  const products = useSelector(selectAllProductsAdmin);
   const brands = useSelector(selectBrands);
   const categories = useSelector(selectCategories);
-  const totalItems = useSelector(selectTotalItems);
+  const totalItems = useSelector(selectTotalItemsAdmin);
   const filters = [
     {
       id: 'category',
@@ -93,7 +96,7 @@ export default function AdminProductList() {
 
   useEffect(() => {
     const pagination = { _page: page, _limit: ITEMS_PER_PAGE };
-    dispatch(fetchProductsByFiltersAsync({ filter, sort, pagination }));
+    dispatch(getAdminProductsByFiltersAsync({ filter, sort, pagination }));
   }, [dispatch, filter, sort, page]);
 
   useEffect(() => {
@@ -483,7 +486,7 @@ function ProductGrid({ products }) {
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
           {products.map((product) => (
             <div>
-              <Link to={`/product-detail/${product.id}`} key={product.id}>
+              <Link to={`/products/${product.id}`} key={product.id}>
                 <div className="group relative border-solid border-2 p-2 border-gray-200">
                   <div className="min-h-60 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-60">
                     <img
@@ -511,9 +514,7 @@ function ProductGrid({ products }) {
                     <div>
                       <p className="text-sm block font-medium text-gray-900">
                         $
-                        {Math.round(
-                          product.price * (1 - product.discountPercentage / 100)
-                        )}
+                        {discountedPrice(product)}
                       </p>
                       <p className="text-sm block line-through font-medium text-gray-400">
                         ${product.price}
@@ -523,6 +524,11 @@ function ProductGrid({ products }) {
                   {product.deleted && (
                     <div>
                       <p className="text-sm text-red-400">product deleted</p>
+                    </div>
+                  )}
+                  {!product.stock && (
+                    <div>
+                      <p className="text-sm text-red-400">Out of stock</p>
                     </div>
                   )}
                 </div>

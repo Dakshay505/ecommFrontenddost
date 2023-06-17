@@ -93,7 +93,6 @@ export default function ProductList() {
   useEffect(() => {
 
     const pagination = { _page: page, _limit: ITEMS_PER_PAGE };
-
     dispatch(fetchProductsByFiltersAsync({ filter, sort, pagination }));
   }, [dispatch, filter, sort, page]);
 
@@ -363,7 +362,7 @@ function DesktopFilter({ handleFilter, filters }) {
               </h3>
               <Disclosure.Panel className="pt-6">
                 <div className="space-y-4">
-                  {section.options.map((option, optionIdx) => (
+                  {section.options && section.options.map((option, optionIdx) => (
                     <div key={option.value} className="flex items-center">
                       <input
                         id={`filter-${section.id}-${optionIdx}`}
@@ -444,6 +443,7 @@ function Pagination({ page, setPage, handlePage, totalItems }) {
 
             {Array.from({ length: totalPages }).map((el, index) => (
               <div
+                key={index}
                 onClick={(e) => handlePage(index + 1)}
                 aria-current="page"
                 className={`relative cursor-pointer z-10 inline-flex items-center ${
@@ -498,7 +498,8 @@ function ProductGrid({ products }) {
                       <span className=" align-bottom">{product.rating}</span>
                     </p>
                   </div>
-                  <div>
+                  <div className=''>
+                    <div className='flex gap-1'>
                     <p className="text-sm block font-medium text-gray-900">
                       $
                       {Math.round(
@@ -508,7 +509,19 @@ function ProductGrid({ products }) {
                     <p className="text-sm block line-through font-medium text-gray-400">
                       ${product.price}
                     </p>
+                    </div>
+                    {!product.stock && (
+                    <div className=''>
+                      <p className="text-sm text-red-500">Out of stock</p>
+                    </div>
+                  )}
+                    {product.stock<10 ? (
+                    <div className=''>
+                      <p className="text-sm text-red-500">Items left {product.stock}</p>
+                    </div>
+                  ):"" }
                   </div>
+                  
                 </div>
               </div>
             </Link>

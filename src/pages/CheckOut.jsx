@@ -16,6 +16,7 @@ import {
   createOrderAsync,
   selectCurrentOrder,
 } from "../features/order/orderSlice";
+import { toast } from "react-hot-toast";
 
 function Checkout() {
   const dispatch = useDispatch();
@@ -32,10 +33,10 @@ function Checkout() {
  
   
   const totalAmount = items.reduce(
-    (amount, item) => item.item.price * item.item.quantity + amount,
+    (amount, item) => item.product.price * item.quantity + amount,
     0
   );
-  const totalItems = items.reduce((total, item) => item.item.quantity + total, 0);
+  const totalItems = items.reduce((total, item) => item.quantity + total, 0);
 
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState(null);
@@ -64,16 +65,17 @@ function Checkout() {
         items,
         totalAmount,
         totalItems,
-        user,
+        user:user.id,
         paymentMethod,
         selectedAddress,
         status: "pending", // other status can be delivered, received.
       };
       dispatch(createOrderAsync(order));
+      toast.success("Product successfully ordered.")
       // need to redirect from here to a new page of order success.
     } else {
       // TODO : we can use proper messaging popup here
-      alert("Enter Address and Payment method");
+      toast.error("Enter Address and Payment method")
     }
     //TODO : Redirect to order-success page
     //TODO : clear cart after order
@@ -83,7 +85,13 @@ function Checkout() {
   return (
     <>
       {!items.length && <Navigate to="/" replace={true}></Navigate>}
-      {currentOrder && (
+      {currentOrder && currentOrder.paymentMethod === "cash" && (
+        <Navigate
+          to={`/order-success/${currentOrder.id}`}
+          replace={true}
+        ></Navigate>
+      )}
+      {currentOrder && currentOrder.paymentMethod === "card" &&(
         <Navigate
           to={`/order-success/${currentOrder.id}`}
           replace={true}
@@ -401,8 +409,8 @@ function Checkout() {
                       <li key={i} className="flex py-6">
                         <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                           <img
-                            src={item.item.thumbnail}
-                            alt={item.item.title}
+                            src={item.product.thumbnail}
+                            alt={item.product.title}
                             className="h-full w-full object-cover object-center"
                           />
                         </div>
@@ -411,12 +419,12 @@ function Checkout() {
                           <div>
                             <div className="flex justify-between text-base font-medium text-gray-900">
                               <h3>
-                                <a href={item.item.href}>{item.item.title}</a>
+                                <a href={item.product.href}>{item.product.title}</a>
                               </h3>
-                              <p className="ml-4">${item.item.price}</p>
+                              <p className="ml-4">${item.product.price}</p>
                             </div>
                             <p className="mt-1 text-sm text-gray-500">
-                              {item.item.brand}
+                              {item.product.brand}
                             </p>
                           </div>
                           <div className="flex flex-1 items-end justify-between text-sm">
@@ -428,8 +436,8 @@ function Checkout() {
                                 Qty
                               </label>
                               <select
-                                onChange={(e) => handleQuantity(e, item.item)}
-                                value={item.item.quantity}
+                                onChange={(e) => handleQuantity(e, item)}
+                                value={item.quantity}
                               >
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -441,7 +449,7 @@ function Checkout() {
 
                             <div className="flex">
                               <button
-                                onClick={(e) => handleRemove(e, item.id)}
+                                onClick={(e) => handleRemove(e, item.product.id)}
                                 type="button"
                                 className="font-medium text-indigo-600 hover:text-indigo-500"
                               >

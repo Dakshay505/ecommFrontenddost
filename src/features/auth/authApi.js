@@ -1,10 +1,38 @@
 import axios from "axios";
 
-export function createUser(userData) {
+export async function createUser(userData) {
+  console.log("in api",userData);
+    const {data} = await axios.post('http://localhost:5050/auth/signup',userData,{
+      withCredentials:true
+    })
+    console.log("data is this",data)
+    return data;
+  
+}
+export async function me() {
+    const {data} = await axios.get('http://localhost:5050/users/me',{withCredentials:true});
+    console.log("data is this",data)
+    return data;
+  
+}
+
+export async function checkUser(loginInfo) {
+ 
+    const email = loginInfo.email;
+    const password = loginInfo.password;
+    const {data} = await axios.post("http://localhost:5050/auth/login",{email,password},{
+      withCredentials:true
+    });
+    return data;
+    // TODO: on server it will only return some info of user (not password)
+
+}
+export function updateUser(update) {
   return new Promise(async (resolve) => {
     const response = await fetch('http://localhost:5050/users', {
-      method: 'POST',
-      body: JSON.stringify(userData),
+      method: 'PATCH',
+      body: JSON.stringify(update),
+      withCredentials:true,
       headers: { 'content-type': 'application/json' },
     });
     const data = await response.json();
@@ -13,37 +41,6 @@ export function createUser(userData) {
   });
 }
 
-export function checkUser(loginInfo) {
-  return new Promise(async (resolve, reject) => {
-    const email = loginInfo.email;
-    const password = loginInfo.password;
-    const response = await fetch('http://localhost:5050/users?email=' + email);
-    const data = await response.json();
-    
-    if (data.length) {
-      if (password === data[0].password) {
-        resolve({ data: data[0] });
-      } else {
-        reject({ message: 'wrong credentials' });
-      }
-    } else {
-      reject({ message: 'user not found' });
-    }
-    // TODO: on server it will only return some info of user (not password)
-  });
-}
-export function updateUser(update) {
-  return new Promise(async (resolve) => {
-    const response = await fetch('http://localhost:5050/users/'+update.id, {
-      method: 'PATCH',
-      body: JSON.stringify(update),
-      headers: { 'content-type': 'application/json' },
-    });
-    const data = await response.json();
-    // TODO: on server it will only return some info of user (not password)
-    resolve({ data });
-  });
-}
 export async function signout(userId) {
  
     const {data} = await axios.get("");

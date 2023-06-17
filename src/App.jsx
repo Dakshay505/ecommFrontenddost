@@ -15,7 +15,7 @@ import OrderSccessPage from "./pages/OrderSccessPage";
 import UserOrders from './features/user/components/UserOrders';
 import UserOrdersPage from './pages/UserOrdersPage';
 import { fetchItemsByUserIdAsync } from "./features/cart/cartSlice";
-import { selectLoggedInUser } from "./features/auth/authSlice";
+import { getUserAsync, selectLoggedInUser } from "./features/auth/authSlice";
 import Logout from "./features/auth/Logout";
 // admin routes
 import ProtectedAdmin from "./features/auth/ProtectedAdmin";
@@ -25,16 +25,18 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ProductForm from "./features/admin/components/ProductForm";
 import AdminProductDetailPage from "./pages/AdminProductFormPage";
 import AdminProductFormPage from "./pages/AdminProductFormPage";
+import AdminHome from "./pages/home/AdminHome";
+import AdminOrdersPage from "./pages/AdminOrdersPage";
+import Stripe from "./pages/stripe";
 
 function App() {
   const dispatch = useDispatch();
   const user = useSelector(selectLoggedInUser);
-  useEffect(()=>{
-    if(user){
-   
-      dispatch(fetchItemsByUserIdAsync(user.id))
-    }
-  },[dispatch, user])
+  
+    useEffect(()=>{
+        console.log("hiii")
+        dispatch(getUserAsync());
+    },[dispatch])
   return (
     <>
       <BrowserRouter>
@@ -48,16 +50,18 @@ function App() {
           <Route path="/cart" element={<Protected> <CartPage /></Protected>} />
           <Route path="/checkout" element={<Protected><Checkout /></Protected>} />
           <Route path="/products/:id" element={<Protected><ProductDetailPage /></Protected>} />
-          <Route path="/order-success/:id" element={<OrderSccessPage/>}/>
+          <Route path="/order-success/:id" element={<Protected><OrderSccessPage/></Protected>}/>
+          <Route path="/stripe-checkout" element={<Protected><Stripe/></Protected>}/>
          
           {/* user Routes */}
           <Route path="/orders" element={<Protected><UserOrdersPage/></Protected>}/>
           <Route path="/profile" element={<Protected><UserProfilePage/></Protected>}/>
           {/* admin Routes */}
-          <Route path="/admin" element={<ProtectedAdmin><Home /></ProtectedAdmin>} />
+          <Route path="/admin" element={<ProtectedAdmin><AdminHome /></ProtectedAdmin>} />
           <Route path="/admin/products/:id" element={<ProtectedAdmin><AdminProductDetailPage /></ProtectedAdmin>} />
-          <Route path="/admin/product-form/:id" element={<ProtectedAdmin><AdminProductFormPage /></ProtectedAdmin>} />
-
+          <Route path="/admin/product-form" element={<ProtectedAdmin><AdminProductFormPage /></ProtectedAdmin>} />
+          <Route path="/admin/product-form/edit/:id" element={<ProtectedAdmin><AdminProductFormPage /></ProtectedAdmin>} />
+          <Route  path= '/admin/orders'  element={<ProtectedAdmin><AdminOrdersPage/></ProtectedAdmin>}/>
 
           <Route path="*" element={<NotFound/>}/>
         </Routes>

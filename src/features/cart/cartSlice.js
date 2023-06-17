@@ -20,7 +20,7 @@ export const fetchItemsByUserIdAsync = createAsyncThunk(
   async (userId) => {
     const response = await fetchItemsByUserId(userId);
     // The value we return becomes the `fulfilled` action payload
-    return response.data;
+    return response;
   }
 );
 
@@ -38,7 +38,7 @@ export const deleteItemFromCartAsync = createAsyncThunk(
   async (itemId) => {
     const response = await deleteItemFromCart(itemId);
     // The value we return becomes the `fulfilled` action payload
-    return response.data;
+    return response;
   }
 );
 

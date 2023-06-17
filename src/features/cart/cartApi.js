@@ -1,25 +1,29 @@
 import axios from "axios";
 export async function addToCart(item) {
-    const {data} = await axios.post('http://localhost:5050/cart',{item})
+  console.log(item)
+    const {data} = await axios.post('http://localhost:5050/cart/add',{
+      withCredentials:true
+    },item)
     return data;
     
 }
 
-export function fetchItemsByUserId(userId) {
-  return new Promise(async (resolve) => {
+export async function fetchItemsByUserId(userId) {
+  
     //TODO: we will not hard-code server URL here
-    console.log("userid for cart");
-    const response = await fetch('http://localhost:5050/cart?user=' + userId);
-    const data = await response.json();
-    resolve({ data });
-  });
+    const {data} = await axios.get(`http://localhost:5050/cart`,{
+      withCredentials:true
+    })
+    return data;
+ 
 }
 
 export function updateCart(update) {
   return new Promise(async (resolve) => {
-    const response = await fetch('http://localhost:5050/cart/' + update.id, {
+    const response = await fetch('http://localhost:5050/cart' , {
       method: 'PATCH',
       body: JSON.stringify(update),
+      withCredentials:true,
       headers: { 'content-type': 'application/json' },
     });
     const data = await response.json();
@@ -28,16 +32,20 @@ export function updateCart(update) {
   });
 }
 
-export function deleteItemFromCart(itemId) {
-  return new Promise(async (resolve) => {
-    const response = await fetch('http://localhost:5050/cart/' + itemId, {
-      method: 'DELETE',
-      headers: { 'content-type': 'application/json' },
-    });
-    const data = await response.json();
-    // TODO: on server it will only return some info of user (not password)
-    resolve({ data: { id: itemId } });
+export async function deleteItemFromCart(itemId) {
+  const {data} = await axios.delete(`http://localhost:5050/cart/${itemId}`,{
+    withCredentials:true
   });
+    return data
+  // return new Promise(async (resolve) => {
+  //   const response = await fetch('http://localhost:5050/cart/' + itemId, {
+  //     method: 'DELETE',
+  //     headers: { 'content-type': 'application/json' },
+  //   });
+  //   const data = await response.json();
+  //   // TODO: on server it will only return some info of user (not password)
+  //   resolve({ data: { id: itemId } });
+  // });
 }
 
 export function resetCart(userId) {
