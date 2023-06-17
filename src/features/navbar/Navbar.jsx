@@ -32,6 +32,10 @@ function classNames(...classes) {
 function NavBar({ children }) {
 const items = useSelector(selectItems);
   const user = useSelector((state)=>state.auth.loggedInUser);
+  function f(){
+    console.log("sdskdnsakncs")
+  }
+  f();
   console.log("user in nav",user)
   const dispatch = useDispatch();
   dispatch(fetchLoggedInUserAsync(user.id))

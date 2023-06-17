@@ -1,35 +1,30 @@
 import axios from "axios";
 export async function addToCart(item) {
   console.log(item)
-    const {data} = await axios.post('http://localhost:5050/cart/add',{
+    const {data} = await axios.post('http://localhost:5050/cart/add',item,{
       withCredentials:true
-    },item)
+    })
     return data;
     
 }
 
-export async function fetchItemsByUserId(userId) {
+export async function fetchItemsByUserId() {
   
     //TODO: we will not hard-code server URL here
-    const {data} = await axios.get(`http://localhost:5050/cart`,{
+
+    const {data} = await axios.get(`http://localhost:5050/cart/allcart`,{
       withCredentials:true
     })
+    console.log("data in cart ",data);
     return data;
  
 }
 
-export function updateCart(update) {
-  return new Promise(async (resolve) => {
-    const response = await fetch('http://localhost:5050/cart' , {
-      method: 'PATCH',
-      body: JSON.stringify(update),
-      withCredentials:true,
-      headers: { 'content-type': 'application/json' },
-    });
-    const data = await response.json();
-    // TODO: on server it will only return some info of user (not password)
-    resolve({ data });
-  });
+export async function updateCart(update) {
+  const {data} = await axios.patch("http://localhost:5050/cart",update,{
+    withCredentials:true
+  })
+  return data;
 }
 
 export async function deleteItemFromCart(itemId) {
@@ -37,21 +32,12 @@ export async function deleteItemFromCart(itemId) {
     withCredentials:true
   });
     return data
-  // return new Promise(async (resolve) => {
-  //   const response = await fetch('http://localhost:5050/cart/' + itemId, {
-  //     method: 'DELETE',
-  //     headers: { 'content-type': 'application/json' },
-  //   });
-  //   const data = await response.json();
-  //   // TODO: on server it will only return some info of user (not password)
-  //   resolve({ data: { id: itemId } });
-  // });
 }
 
-export function resetCart(userId) {
+export function resetCart() {
   // get all items of user's cart - and then delete each
   return new Promise(async (resolve) => {
-    const response = await fetchItemsByUserId(userId);
+    const response = await fetchItemsByUserId();
     const items = response.data;
     for (let item of items) {
       await deleteItemFromCart(item.id);

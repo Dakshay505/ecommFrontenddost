@@ -1,28 +1,20 @@
-export function createOrder(order) {
-  return new Promise(async (resolve) => {
-    const response = await fetch('http://localhost:5050/orders', {
-      method: 'POST',
-      body: JSON.stringify(order),
-      headers: { 'content-type': 'application/json' },
-    });
-    const data = await response.json();
-    resolve({ data });
-  });
+import axios from "axios";
+
+export async function createOrder(order) {
+ const {data} = await axios.post("http://localhost:5050/orders",order,{
+  withCredentials:true
+ })
+   return data;
 }
 
-export function updateOrder(order) {
-  return new Promise(async (resolve) => {
-    const response = await fetch('http://localhost:5050/orders/'+order.id, {
-      method: 'PATCH',
-      body: JSON.stringify(order),
-      headers: { 'content-type': 'application/json' },
-    });
-    const data = await response.json();
-    resolve({ data });
-  });
+export async function updateOrder(order) {
+   const {data} = await axios.patch(`http://localhost:5050/orders/${order.id}`,order,{
+    withCredentials:true
+   })
+   return data;
 }
 
-export function fetchAllOrders(sort, pagination) {
+export async function fetchAllOrders(sort, pagination) {
  let queryString = '';
 
  for (let key in sort) {
@@ -32,14 +24,9 @@ export function fetchAllOrders(sort, pagination) {
     queryString += `${key}=${pagination[key]}&`;
   }
 
-  return new Promise(async (resolve) => {
-    //TODO: we will not hard-code server URL here
-    const response = await fetch(
-      'http://localhost:5050/orders?' + queryString
-    );
-    const data = await response.json();
-    const totalOrders = await response.headers.get('X-Total-Count');
-    console.log(data);
-    resolve({ data: { orders: data, totalOrders: +totalOrders } });
-  });
+  const data = await axios.get(`http://localhost:5050/orders?${queryString}`,{
+    withCredentials:true
+  })
+  const totalOrders = await response.headers.get('X-Total-Count');
+  return { data: { orders: data, totalOrders: +totalOrders } }
 }

@@ -1,30 +1,23 @@
 import axios from "axios";
 
-export async function fetchLoggedInUserOrders(userId) {
+export async function fetchLoggedInUserOrders() {
   const {data} = await axios.get(`http://localhost:5050/orders`)
   return data
 }
 
 
-export async function fetchLoggedInUser(userId) {
+export async function fetchLoggedInUser() {
     const {data} = await axios.get(`http://localhost:5050/users/me`);
-    
     return data;
   }
 
 
 
-export function updateUser(update) {
-  return new Promise(async (resolve) => {
-
-    const response = await fetch('http://localhost:5050/users/me', {
-      method: 'PATCH',
-      body: JSON.stringify(update),
-      headers: { 'content-type': 'application/json' },
-    });
-    const data = await response.json();
-    // TODO: on server it will only return some info of user (not password)
-    resolve({ data });
-  });
+export async function updateUser(update) {
+  const {data} = await axios.patch("http://localhost:5050/users/me",update,{
+    withCredentials:true
+  })
+  console.log("data is in update user",data);
+  return data;
 }
 
