@@ -1,13 +1,18 @@
 import axios from "axios";
 
 export async function fetchLoggedInUserOrders() {
-  const {data} = await axios.get(`http://localhost:5050/orders`)
-  return data
+  const {data} = await axios.get(`http://localhost:5050/orders/me`,{
+    withCredentials:true
+  })
+  console.log("################",data)
+  return data;
 }
 
 
 export async function fetchLoggedInUser() {
-    const {data} = await axios.get(`http://localhost:5050/users/me`);
+    const {data} = await axios.get(`http://localhost:5050/users/me`,{
+      withCredentials:true
+    });
     return data;
   }
 

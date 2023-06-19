@@ -20,7 +20,7 @@ function AdminOrders() {
   const dispatch = useDispatch();
   const orders = useSelector(selectOrders);
   const totalOrders = useSelector(selectTotalOrders);
-  console.log(orders);
+  console.log("all orders",orders);
   console.log(totalOrders);
   const [editableOrderId, setEditableOrderId] = useState(-1);
   const [sort, setSort] = useState({});
@@ -44,7 +44,7 @@ function AdminOrders() {
 
   const handleSort = (sortOption) => {
     const sort = { _sort: sortOption.sort, _order: sortOption.order };
-    console.log({ sort });
+    
     setSort(sort);
   };
 
@@ -65,6 +65,7 @@ function AdminOrders() {
 
   useEffect(() => {
     const pagination = { _page: page, _limit: ITEMS_PER_PAGE };
+    
     dispatch(fetchAllOrdersAsync({ sort, pagination }));
   }, [dispatch, page, sort]);
 

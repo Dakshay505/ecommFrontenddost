@@ -28,6 +28,7 @@ import AdminProductFormPage from "./pages/AdminProductFormPage";
 import AdminHome from "./pages/home/AdminHome";
 import AdminOrdersPage from "./pages/AdminOrdersPage";
 import Stripe from "./pages/stripe";
+import { fetchLoggedInUserOrderAsync } from "./features/user/userSlice";
 
 function App() {
   const dispatch = useDispatch();
@@ -36,7 +37,7 @@ function App() {
     useEffect(()=>{
         console.log("hiii")
         dispatch(getUserAsync());
-    },[dispatch])
+    },[dispatch]);
   return (
     <>
       <BrowserRouter>

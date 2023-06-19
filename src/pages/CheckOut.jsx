@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   deleteItemFromCartAsync,
+  resetCartAsync,
   selectItems,
   updateCartAsync,
 } from "../features/cart/cartSlice";
@@ -71,7 +72,10 @@ function Checkout() {
         status: "pending", // other status can be delivered, received.
       };
       dispatch(createOrderAsync(order));
-      toast.success("Product successfully ordered.")
+      if(currentOrder.paymentMethod === "cash"){
+        toast.success("Product successfully ordered.")
+      }
+      
       // need to redirect from here to a new page of order success.
     } else {
       // TODO : we can use proper messaging popup here
@@ -93,7 +97,7 @@ function Checkout() {
       )}
       {currentOrder && currentOrder.paymentMethod === "card" &&(
         <Navigate
-          to={`/order-success/${currentOrder.id}`}
+          to={`/stripe-checkout`}
           replace={true}
         ></Navigate>
       )}

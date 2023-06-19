@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import {
   Bars3Icon,
@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectItems } from '../cart/cartSlice';
 import { selectLoggedInUser } from '../auth/authSlice';
-import {fetchLoggedInUserAsync} from "../user/userSlice"
+import {fetchLoggedInUserAsync, fetchLoggedInUserOrderAsync} from "../user/userSlice"
 
 
 const navigation = [
@@ -39,6 +39,9 @@ const items = useSelector(selectItems);
   console.log("user in nav",user)
   const dispatch = useDispatch();
   dispatch(fetchLoggedInUserAsync(user.id))
+  useEffect(() => {
+    dispatch(fetchLoggedInUserOrderAsync());
+  }, [dispatch]);
 
   return (
     <>

@@ -24,9 +24,11 @@ export async function fetchAllOrders(sort, pagination) {
     queryString += `${key}=${pagination[key]}&`;
   }
 
-  const data = await axios.get(`http://localhost:5050/orders?${queryString}`,{
+  const data = await axios.get(`http://localhost:5050/orders/admin/all?${queryString}`,{
     withCredentials:true
   })
-  const totalOrders = await response.headers.get('X-Total-Count');
-  return { data: { orders: data, totalOrders: +totalOrders } }
+ 
+  const totalOrders = await data.headers['x-total-count'];
+  
+  return { data: { orders: data.data, totalOrders: totalOrders } }
 }

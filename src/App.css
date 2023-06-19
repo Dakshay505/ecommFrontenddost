@@ -24,7 +24,7 @@
   }
   
   /* Buttons and links */
-.stripe button {
+.stripe form button {
     background: #5469d4;
     font-family: Arial, sans-serif;
     color: #ffffff;
@@ -40,11 +40,11 @@
     width: 100%;
   }
   
-  .stripe button:hover {
+  .stripe form button:hover {
     filter: contrast(115%);
   }
   
-  .stripe button:disabled {
+  .stripe form button:disabled {
     opacity: 0.5;
     cursor: default;
   }
@@ -114,7 +114,7 @@
   }
   
   @media only screen and (max-width: 600px) {
-    .stripe form {
+    .stripe form form {
       width: 80vw;
       min-width: initial;
     }

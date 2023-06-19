@@ -6,6 +6,7 @@ import {
   useElements
 } from "@stripe/react-stripe-js";
 import { useSelector } from "react-redux";
+import { toast } from "react-hot-toast";
 
 export default function CheckoutForm() {
   const stripe = useStripe();
@@ -22,7 +23,7 @@ export default function CheckoutForm() {
     }
 
     const clientSecret = new URLSearchParams(window.location.search).get(
-      "payment_intent_client_secret"
+      "http://localhost:5050/payment_intent_client_secret"
     );
 
     if (!clientSecret) {
@@ -32,16 +33,16 @@ export default function CheckoutForm() {
     stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
       switch (paymentIntent.status) {
         case "succeeded":
-          setMessage("Payment succeeded!");
+          toast.success("Payment succeeded!");
           break;
         case "processing":
-          setMessage("Your payment is processing.");
+          toast.loading("Your payment is processing.");
           break;
         case "requires_payment_method":
-          setMessage("Your payment was not successful, please try again.");
+          toast.error("Your payment was not successful, please try again.");
           break;
         default:
-          setMessage("Something went wrong.");
+          toast.error("Something went wrong.");
           break;
       }
     });
